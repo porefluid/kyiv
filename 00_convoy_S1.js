@@ -48,7 +48,7 @@ s1 = s1.toList(s1.size());
 // retrieve first list item
 var first = ee.Image(s1.get(0))
 
-// retrieve first list item
+// retrieve last list item
 var last = ee.Image(s1.get(-1))
 
 //calculate difference final minus initial
