@@ -12,15 +12,13 @@ var kyiv =
     vis = {"opacity":1,"bands":["VV_norm","VH_norm","VH_norm"],"min":0.25,"max":0.75,"gamma":1},
     geometry = /* color: #04ff1d */ee.Geometry.MultiPoint();
 
-// draw a reference region around Kyiv for image normalization statistics
-
-
 // set a point from where social media reports suggest convoy buildup 
 var geometry = ee.Geometry.Point([30.06474853644518, 50.84181041220485])
 
 // set the target area
 var target = geometry;
-// define a function to normalie images and calculate a difference betwee co and cross polarized channels
+
+// define a function to normalize images and calculate a difference betwee co and cross polarized channels
 var maxMinNorm = function(image){
   var max_vh = ee.Number(image.reduceRegion(ee.Reducer.max(), kyiv, 1000).get('VH'));
   var max_vv = ee.Number(image.reduceRegion(ee.Reducer.max(), kyiv, 1000).get('VV'));
