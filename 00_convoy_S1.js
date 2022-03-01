@@ -1,16 +1,19 @@
 //import collection and set visualization params
-
-var s1 = ee.ImageCollection("COPERNICUS/S1_GRD"),
-    vis = {"opacity":1,"bands":["VV_norm","VH_norm","VH_norm"],"min":0.25,"max":0.75,"gamma":1},
-    vis2 = {"opacity":1,"bands":["VH_norm","VV_norm","VV_norm"],"min":0.3,"max":0.5,"gamma":1},
-    geometry = /* color: #04ff1d */ee.Geometry.MultiPoint();
-
-// draw a reference region around Kyiv for image normalization statistics
-var kyiv = ee.Geometry.Polygon(
+var kyiv = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[29.493199333624094, 51.02315415826779],
           [29.493199333624094, 50.1143087111848],
           [31.336155876592844, 50.1143087111848],
-          [31.336155876592844, 51.02315415826779]]], null, false)
+          [31.336155876592844, 51.02315415826779]]], null, false),
+    vis2 = {"opacity":1,"bands":["VH_norm","VV_norm","VV_norm"],"min":0.15,"max":0.4,"gamma":1},
+    s1 = ee.ImageCollection("COPERNICUS/S1_GRD"),
+    vis = {"opacity":1,"bands":["VV_norm","VH_norm","VH_norm"],"min":0.25,"max":0.75,"gamma":1},
+    geometry = /* color: #04ff1d */ee.Geometry.MultiPoint();
+
+// draw a reference region around Kyiv for image normalization statistics
+
 
 // set a point from where social media reports suggest convoy buildup 
 var geometry = ee.Geometry.Point([30.06474853644518, 50.84181041220485])
