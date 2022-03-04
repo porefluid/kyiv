@@ -9,11 +9,11 @@ var kyiv =
           [31.336155876592844, 51.02315415826779]]], null, false),
     s1 = ee.ImageCollection("COPERNICUS/S1_GRD"),
     vis = {"opacity":1,"bands":["VV_norm","VH_norm","VH_norm"],"min":0.25,"max":0.75,"gamma":1},
-    geometry = /* color: #04ff1d */ee.Geometry.MultiPoint(),
+    line = /* color: #04ff1d */ee.Geometry.MultiPoint(),
     vis2 = {"opacity":1,"bands":["VH_norm","VV_norm","VV_norm"],"min":0.15,"max":0.2,"gamma":1};
 
 
-// draw a reference region around Kyiv for image normalization statistics
+// draw a reference reggeion around Kyiv for image normalization statistics
 
 
 // set a point from where social media reports suggest convoy buildup 
