@@ -7,18 +7,21 @@ var kyiv =
           [29.493199333624094, 50.1143087111848],
           [31.336155876592844, 50.1143087111848],
           [31.336155876592844, 51.02315415826779]]], null, false),
-    vis2 = {"opacity":1,"bands":["VH_norm","VV_norm","VV_norm"],"min":0.15,"max":0.4,"gamma":1},
     s1 = ee.ImageCollection("COPERNICUS/S1_GRD"),
     vis = {"opacity":1,"bands":["VV_norm","VH_norm","VH_norm"],"min":0.25,"max":0.75,"gamma":1},
-    geometry = /* color: #04ff1d */ee.Geometry.MultiPoint();
+    geometry = /* color: #04ff1d */ee.Geometry.MultiPoint(),
+    vis2 = {"opacity":1,"bands":["VH_norm","VV_norm","VV_norm"],"min":0.15,"max":0.2,"gamma":1};
+
+
+// draw a reference region around Kyiv for image normalization statistics
+
 
 // set a point from where social media reports suggest convoy buildup 
 var geometry = ee.Geometry.Point([30.06474853644518, 50.84181041220485])
 
 // set the target area
 var target = geometry;
-
-// define a function to normalize images and calculate a difference betwee co and cross polarized channels
+// define a function to normalie images and calculate a difference betwee co and cross polarized channels
 var maxMinNorm = function(image){
   var max_vh = ee.Number(image.reduceRegion(ee.Reducer.max(), kyiv, 1000).get('VH'));
   var max_vv = ee.Number(image.reduceRegion(ee.Reducer.max(), kyiv, 1000).get('VV'));
@@ -34,7 +37,6 @@ var maxMinNorm = function(image){
 };
 
 // import the image collection and filter by target area and dates
-
 s1 = s1.filterBounds(target).filterDate('2022-02-16', '2022-03-30');
 
 //map function across collection
@@ -46,16 +48,26 @@ s1 = s1.toList(s1.size());
 // retrieve first list item
 var first = ee.Image(s1.get(0))
 
-// retrieve last list item
+// retrieve second to last item
+var mid = ee.Image(s1.get(-2))
+
+// retrieve first list item
 var last = ee.Image(s1.get(-1))
 
+//list item 1 is the "before" image in orbit path 87. retrieve that and subtract last from path 87 reference
+var ref87 = ee.Image(s1.get(1));
+
 //calculate difference final minus initial
-var dif = last.subtract(first).abs()
+var difFeb28 = mid.subtract(first)//.gt(0.25) // .abs()
+var difMarch3 = mid.subtract(ref87)//.gt(0.25) // .abs()
 
 // add layers to map
-Map.addLayer(ee.Image(s1.get(0)), vis, ee.Image(s1.get(0)).get('system:index').getInfo());
-Map.addLayer(ee.Image(s1.get(-1)), vis, ee.Image(s1.get(-1)).get('system:index').getInfo());
-Map.addLayer(dif, vis2, 'final minus initial');
+
+Map.addLayer(first, vis, first.get('system:index').getInfo());
+Map.addLayer(mid, vis, mid.get('system:index').getInfo());
+Map.addLayer(last, vis, last.get('system:index').getInfo());
+Map.addLayer(difFeb28, vis2, 'Feb 28 anomaly', false);
+Map.addLayer(difMarch3, vis2, 'March 3 anomaly', true, 0.75);
 
 // center map
 Map.centerObject(target, 14)
